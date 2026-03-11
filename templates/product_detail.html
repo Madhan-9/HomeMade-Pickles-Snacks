@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - HomeMade Pickles & Snacks</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #4C7244;
+            --dark-green: #3A5A35;
+            --light-green: #6B8E23;
+            --gold: #FFD700;
+            --white: #ffffff;
+            --text-dark: #333333;
+            --text-light: #666666;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8f1e4 0%, #fff5e6 50%, #f0e6d3 100%);
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(76, 114, 68, 0.98);
+            padding: 0 40px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo-btn {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .nav-links a {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #FFD700;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .cart-icon {
+            position: relative;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .cart-icon:hover {
+            background: #FFD700;
+            color: var(--primary-green);
+        }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #FFD700;
+            color: var(--primary-green);
+            font-size: 0.75rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Product Detail Section */
+        .product-detail-section {
+            padding: 100px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-images {
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--primary-green);
+        }
+
+        .product-info {
+            padding: 10px;
+        }
+
+        .product-badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge Bestseller {
+            background: var(--gold);
+            color: var(--primary-green);
+        }
+
+        .product-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .rating-box {
+            background: #388e3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+        }
+
+        .review-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+        }
+
+        .current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .current-price .currency {
+            font-size: 1.2rem;
+        }
+
+        .original-price {
+            font-size: 1.2rem;
+            color: #666;
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .discount-tag {
+            background: #ff6161;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .free-delivery {
+            color: #388e3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Weight Selection */
+        .weight-section {
+            margin: 25px 0;
+        }
+
+        .weight-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .weight-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .weight-btn {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
+        }
+
+        .weight-btn:hover {
+            border-color: var(--primary-green);
+        }
+
+        .weight-btn.selected {
+            border-color: var(--primary-green);
+            background: rgba(76, 114, 68, 0.1);
+        }
+
+        .weight-btn .weight {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .weight-btn .price {
+            font-size: 0.85rem;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn-cart {
+            flex: 1;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(76, 114, 68, 0.4);
+        }
+
+        .btn-buy {
+            flex: 1;
+            padding: 15px;
+            background: #ff9f00;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-buy:hover {
+            background: #e68a00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 159, 0, 0.4);
+        }
+
+        /* Product Details */
+        .product-details {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .details-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .description-text {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .no-return {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .no-return i {
+            color: #388e3c;
+        }
+
+        /* Related Products */
+        .related-products {
+            margin-top: 50px;
+        }
+
+        .related-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-green);
+            margin-bottom: 25px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .related-card h4 {
+            font-size: 1rem;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+
+        .related-card .price {
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .product-container {
+                grid-template-columns: 1fr;
+            }
+            .related-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            .weight-options {
+                gap: 8px;
+            }
+            .weight-btn {
+                padding: 10px 15px;
+                min-width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <button class="logo-btn" onclick="window.location.href='{{ url_for('home') if current_user.is_authenticated else url_for('index') }}'">
+                <i class="fas fa-jar"></i> HomeMade Pickles
+            </button>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('home') if current_user.is_authenticated else url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('cart') }}" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="product-detail-section">
+        <div class="product-container">
+            <div class="product-images">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="main-image" id="main-image">
+                <div class="thumbnail-container">
+                    <img src="{{ product.image }}" class="thumbnail active" onclick="changeImage(this)">
+                </div>
+            </div>
+
+            <div class="product-info">
+                <div class="product-badges">
+                    {% if product.badge %}
+                    <span class="badge Bestseller">{{ product.badge }}</span>
+                    {% endif %}
+                    <span class="badge" style="background: #388e3c; color: white;">Free Delivery</span>
+                </div>
+
+                <h1 class="product-title">{{ product.name }}</h1>
+
+                <div class="product-rating">
+                    <span class="rating-box">
+                        {{ product.rating }} <i class="fas fa-star"></i>
+                    </span>
+                    <span class="rating-stars">
+                        {% for i in range(5) %}
+                            {% if i < product.rating|int %}
+                                <i class="fas fa-star"></i>
+                            {% elif product.rating - i >= 0.5 %}
+                                <i class="fas fa-star-half-alt"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="review-count">{{ product.reviews }} Reviews</span>
+                </div>
+
+                <div class="price-section">
+                    <span class="current-price"><span class="currency">₹</span><span id="current-price">{{ first_price }}</span></span>
+                    <span class="original-price">₹{{ product.oldPrice }}</span>
+                    <span class="discount-tag">{{ product.discount }}% OFF</span>
+                    <div class="free-delivery">
+                        <i class="fas fa-truck"></i> Free Delivery
+                    </div>
+                </div>
+
+                <div class="weight-section">
+                    <div class="weight-title">Select Weight:</div>
+                    <div class="weight-options">
+                        {% for weight, price in product.weights.items() %}
+                        <button class="weight-btn {% if loop.first %}selected{% endif %}" 
+                                data-weight="{{ weight }}" 
+                                data-price="{{ price }}"
+                                onclick="selectWeight(this)">
+                            <span class="weight">{{ weight }}g</span>
+                            <span class="price">₹{{ price }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-cart" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i> ADD TO CART
+                    </button>
+                    <button class="btn-buy" onclick="buyNow()">
+                        <i class="fas fa-bolt"></i> BUY NOW
+                    </button>
+                </div>
+
+                <div class="product-details">
+                    <div class="details-title">Product Description</div>
+                    <p class="description-text">{{ product.description }}</p>
+                    <div class="no-return">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>No Returns</strong> - This product is not eligible for return or exchange as per company policy.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="related-products">
+            <h2 class="related-title">Related Products</h2>
+            <div class="related-grid" id="related-products">
+                <!-- Related products will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let selectedWeight = '{{ first_weight }}';
+        let selectedPrice = {{ first_price }};
+        let currentProductId = {{ product.id }};
+
+        function selectWeight(btn) {
+            document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedWeight = btn.dataset.weight;
+            selectedPrice = parseInt(btn.dataset.price);
+            document.getElementById('current-price').textContent = selectedPrice;
+        }
+
+        function changeImage(thumb) {
+            document.getElementById('main-image').src = thumb.src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+        }
+
+        function addToCart() {
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    product_id: currentProductId,
+                    product_name: '{{ product.name }}',
+                    price: selectedPrice,
+                    quantity: 1,
+                    weight: selectedWeight,
+                    image: '{{ product.image }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('cart-count').textContent = data.cart_count;
+                    alert('Item added to cart successfully!');
+                } else {
+                    alert('Failed to add item to cart');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add item to cart');
+            });
+        }
+
+        function buyNow() {
+            fetch('/buy_now', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    product_id: currentProductId,
+                    product_name: '{{ product.name }}',
+                    price: selectedPrice,
+                    quantity: 1,
+                    weight: selectedWeight,
+                    image: '{{ product.image }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Failed to process buy now');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to process buy now');
+            });
+        }
+
+        // Load related products
+        const allProducts = [
+            { id: 1, name: "Traditional Mango Pickle", category: "veg-pickle", price: 299, image: "../static/images/MangoPickel.jpg" },
+            { id: 2, name: "Lemon Pickle", category: "veg-pickle", price: 199, image: "../static/images/Lemon pickel.jpg" },
+            { id: 3, name: "Tomato Pickle", category: "veg-pickle", price: 179, image: "../static/images/Tomato pickle.jpg" },
+            { id: 4, name: "Gongura Pickle", category: "veg-pickle", price: 249, image: "../static/images/Gongura.jpg" },
+            { id: 7, name: "Chicken Boneless Pickle", category: "non-veg-pickle", price: 499, image: "../static/images/chicken-boneless-pickle.jpg" },
+            { id: 8, name: "Fish Pickle", category: "non-veg-pickle", price: 449, image: "../static/images/fish pickle.JPG" },
+            { id: 9, name: "Mutton Pickle", category: "non-veg-pickle", price: 599, image: "../static/images/mutton pickle.jpg" },
+            { id: 10, name: "Gongura Chicken", category: "non-veg-pickle", price: 449, image: "../static/images/gongurachicken.jpg" },
+            { id: 13, name: "Aam Papad", category: "snacks", price: 149, image: "../static/images/Aam-Papad.jpg" },
+            { id: 14, name: "Banana Chips", category: "snacks", price: 129, image: "../static/images/Banana1.jpg" },
+            { id: 15, name: "Boondi Laddu", category: "snacks", price: 249, image: "../static/images/boondi-laddu-665537.jpg" },
+            { id: 16, name: "Sunnundalu", category: "snacks", price: 199, image: "../static/images/Sunnundalu.jpg" }
+        ];
+
+        // Filter products from same category (excluding current product)
+        const relatedProducts = allProducts
+            .filter(p => p.category === '{{ product.category }}' && p.id !== {{ product.id }})
+            .slice(0, 4);
+
+        // If not enough products, add from other categories
+        if (relatedProducts.length < 4) {
+            const otherProducts = allProducts
+                .filter(p => p.id !== {{ product.id }} && !relatedProducts.find(r => r.id === p.id))
+                .slice(0, 4 - relatedProducts.length);
+            relatedProducts.push(...otherProducts);
+        }
+
+        // Render related products
+        const relatedHtml = relatedProducts.map(p => `
+            <div class="related-card" onclick="window.location.href='/product/${p.id}'">
+                <img src="${p.image}" alt="${p.name}">
+                <h4>${p.name}</h4>
+                <span class="price">₹${p.price}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('related-products').innerHTML = relatedHtml;
+
+        // Update cart count
+        fetch('/get_cart_count')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cart-count').textContent = data.count;
+            })
+            .catch(() => {
+                document.getElementById('cart-count').textContent = '0';
+            });
+    </script>
+</body>
+</html>
